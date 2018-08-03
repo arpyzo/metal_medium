@@ -8,15 +8,18 @@
 
 import UIKit
 import Metal
+import MetalKit
 
 class ViewController: UIViewController {
     var metalDevice: MTLDevice!
     var metalLayer: CAMetalLayer!
     var pipelineState: MTLRenderPipelineState!
     var commandQueue: MTLCommandQueue!
+    var textureLoader: MTKTextureLoader!
     var timer: CADisplayLink!
     
-    var objectToDraw: Triangle!
+    var texture: MTLTexture!
+    var objectToDraw: Rectangle!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,8 +29,21 @@ class ViewController: UIViewController {
         metalLayer.device = metalDevice
         metalLayer.frame = view.layer.frame
         view.layer.addSublayer(metalLayer)
+        
+        textureLoader = MTKTextureLoader(device: metalDevice)
+        
+        //let path = Bundle.main.path(forResource: "zelda", ofType: "png")!
+        //let data = NSData(contentsOfFile: path) as! Data
+        //let texture = try! textureLoader.newTexture(with: data, options: [MTKTextureLoaderOptionSRGB : (false as NSNumber)])
+        //texture = try! textureLoader.newTexture(name: "zelda.png", scaleFactor: 1.0, bundle: Bundle.main, options: [MTKTextureLoader.Option.SRGB : (false as NSNumber)])
+        let path = Bundle.main.path(forResource: "zelda", ofType: "png")
+        //let textureLoader = MTKTextureLoader(device: device!)
+        texture = try! textureLoader.newTexture(URL: NSURL(fileURLWithPath: path!) as URL, options: nil)
 
-        objectToDraw = Triangle(metalDevice: metalDevice)
+        //newTexture(name: "zelda.png", scaleFactor: CGFloat, bundle: Bundle?, options: [MTKTextureLoader.Option : Any]? = nil)
+
+
+        objectToDraw = Rectangle(metalDevice: metalDevice)
         
         let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
         let metalLibrary = metalDevice.makeDefaultLibrary()!
@@ -50,7 +66,8 @@ class ViewController: UIViewController {
     
     func render() {
         guard let drawable = metalLayer?.nextDrawable() else { return }
-        objectToDraw.render(commandQueue: commandQueue, pipelineState: pipelineState, drawable: drawable, clearColor: nil)
+        objectToDraw.render(commandQueue: commandQueue, pipelineState: pipelineState, drawable: drawable, texture: texture)
+        //objectToDraw.render(commandQueue: commandQueue, pipelineState: pipelineState, drawable: drawable)
     }
 
     @objc func gameLoop() {

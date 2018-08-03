@@ -14,6 +14,8 @@ class Node {
     var vertexCount: Int
     var vertexBuffer: MTLBuffer!
     
+    var samplerState: MTLSamplerState!
+    
     init(vertices: Array<Vertex>, metalDevice: MTLDevice) {
         var vertexData = Array<Float>()
         for vertex in vertices {
@@ -23,10 +25,13 @@ class Node {
         let dataSize = vertexData.count * MemoryLayout.size(ofValue: vertexData[0])
         vertexBuffer = metalDevice.makeBuffer(bytes: vertexData, length: dataSize, options: [])
         
+        samplerState = Node.defaultSampler(metalDevice)
+        
         vertexCount = vertices.count
     }
     
-    func render(commandQueue: MTLCommandQueue, pipelineState: MTLRenderPipelineState, drawable: CAMetalDrawable) {
+    func render(commandQueue: MTLCommandQueue, pipelineState: MTLRenderPipelineState, drawable: CAMetalDrawable, texture: MTLTexture) {
+    //func render(commandQueue: MTLCommandQueue, pipelineState: MTLRenderPipelineState, drawable: CAMetalDrawable) {
         let renderPassDescriptor = MTLRenderPassDescriptor()
         renderPassDescriptor.colorAttachments[0].texture = drawable.texture
         renderPassDescriptor.colorAttachments[0].loadAction = .clear
@@ -41,10 +46,35 @@ class Node {
         renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
         renderEncoder.setRenderPipelineState(pipelineState)
         renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
+        renderEncoder.setFragmentTexture(texture, index: 0)
+        if let samplerState = samplerState {
+            renderEncoder.setFragmentSamplerState(samplerState, index: 0)
+        }
         renderEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: vertexCount, instanceCount: vertexCount/3)
         renderEncoder.endEncoding()
         
         commandBuffer.present(drawable)
         commandBuffer.commit()
+    }
+    
+    class func defaultSampler(_ device: MTLDevice) -> MTLSamplerState {
+        let pSamplerDescriptor:MTLSamplerDescriptor? = MTLSamplerDescriptor();
+        
+        if let sampler = pSamplerDescriptor {
+            sampler.minFilter             = MTLSamplerMinMagFilter.nearest
+            sampler.magFilter             = MTLSamplerMinMagFilter.nearest
+            sampler.mipFilter             = MTLSamplerMipFilter.nearest
+            sampler.maxAnisotropy         = 1
+            sampler.sAddressMode          = MTLSamplerAddressMode.clampToEdge
+            sampler.tAddressMode          = MTLSamplerAddressMode.clampToEdge
+            sampler.rAddressMode          = MTLSamplerAddressMode.clampToEdge
+            sampler.normalizedCoordinates = true
+            sampler.lodMinClamp           = 0
+            sampler.lodMaxClamp           = FLT_MAX
+        }
+        else {
+            print(">> ERROR: Failed creating a sampler descriptor!")
+        }
+        return device.makeSamplerState(descriptor: pSamplerDescriptor!)!
     }
 }
