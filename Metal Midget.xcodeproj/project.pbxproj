@@ -10,6 +10,9 @@
 		D71C915720DF155C008C8B96 /* Vertex.swift in Sources */ = {isa = PBXBuildFile; fileRef = D71C915620DF155C008C8B96 /* Vertex.swift */; };
 		D71C915920DF173F008C8B96 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = D71C915820DF173F008C8B96 /* Node.swift */; };
 		D71C915B20DF18FB008C8B96 /* Triangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = D71C915A20DF18FB008C8B96 /* Triangle.swift */; };
+		D756A35D20F1D32F0079AEAF /* Rectangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = D756A35C20F1D32F0079AEAF /* Rectangle.swift */; };
+		D78F9F9721200B08008634FC /* Matrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = D78F9F9621200B08008634FC /* Matrix.swift */; };
+		D7AFF1B921141E2500CF120F /* zelda.png in Resources */ = {isa = PBXBuildFile; fileRef = D7AFF1B821141E2500CF120F /* zelda.png */; };
 		D7C7C0FD20E1FE31001CAF70 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7C7C0FB20E1FE31001CAF70 /* Main.storyboard */; };
 		D7C7C0FE20E1FE31001CAF70 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7C7C0FC20E1FE31001CAF70 /* LaunchScreen.storyboard */; };
 		D7D9B9EB202587C0000C79B7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D9B9EA202587C0000C79B7 /* AppDelegate.swift */; };
@@ -21,6 +24,9 @@
 		D71C915620DF155C008C8B96 /* Vertex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vertex.swift; sourceTree = "<group>"; };
 		D71C915820DF173F008C8B96 /* Node.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
 		D71C915A20DF18FB008C8B96 /* Triangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Triangle.swift; sourceTree = "<group>"; };
+		D756A35C20F1D32F0079AEAF /* Rectangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rectangle.swift; sourceTree = "<group>"; };
+		D78F9F9621200B08008634FC /* Matrix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Matrix.swift; sourceTree = "<group>"; };
+		D7AFF1B821141E2500CF120F /* zelda.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = zelda.png; sourceTree = "<group>"; };
 		D7C7C0FB20E1FE31001CAF70 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		D7C7C0FC20E1FE31001CAF70 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D7D9B9E7202587C0000C79B7 /* Metal Midget.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Metal Midget.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -60,6 +66,7 @@
 		D7D9B9E9202587C0000C79B7 /* Metal Midget */ = {
 			isa = PBXGroup;
 			children = (
+				D7AFF1B821141E2500CF120F /* zelda.png */,
 				D7C7C0FC20E1FE31001CAF70 /* LaunchScreen.storyboard */,
 				D7C7C0FB20E1FE31001CAF70 /* Main.storyboard */,
 				D7D9B9EA202587C0000C79B7 /* AppDelegate.swift */,
@@ -69,6 +76,8 @@
 				D71C915620DF155C008C8B96 /* Vertex.swift */,
 				D71C915820DF173F008C8B96 /* Node.swift */,
 				D71C915A20DF18FB008C8B96 /* Triangle.swift */,
+				D756A35C20F1D32F0079AEAF /* Rectangle.swift */,
+				D78F9F9621200B08008634FC /* Matrix.swift */,
 			);
 			path = "Metal Midget";
 			sourceTree = "<group>";
@@ -133,6 +142,7 @@
 			files = (
 				D7C7C0FE20E1FE31001CAF70 /* LaunchScreen.storyboard in Resources */,
 				D7C7C0FD20E1FE31001CAF70 /* Main.storyboard in Resources */,
+				D7AFF1B921141E2500CF120F /* zelda.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -146,6 +156,8 @@
 				D7D9B9FD20258F93000C79B7 /* Shaders.metal in Sources */,
 				D71C915920DF173F008C8B96 /* Node.swift in Sources */,
 				D71C915720DF155C008C8B96 /* Vertex.swift in Sources */,
+				D756A35D20F1D32F0079AEAF /* Rectangle.swift in Sources */,
+				D78F9F9721200B08008634FC /* Matrix.swift in Sources */,
 				D71C915B20DF18FB008C8B96 /* Triangle.swift in Sources */,
 				D7D9B9ED202587C0000C79B7 /* ViewController.swift in Sources */,
 				D7D9B9EB202587C0000C79B7 /* AppDelegate.swift in Sources */,

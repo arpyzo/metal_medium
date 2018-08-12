@@ -13,8 +13,10 @@ import QuartzCore
 class Node {
     var vertexCount: Int
     var vertexBuffer: MTLBuffer!
-    
+    var uniformBuffer: MTLBuffer!
     var samplerState: MTLSamplerState!
+    var scaleMatrix: Matrix!
+
     
     init(vertices: Array<Vertex>, metalDevice: MTLDevice) {
         var vertexData = Array<Float>()
@@ -22,9 +24,20 @@ class Node {
             vertexData += vertex.floatBuffer()
         }
         
-        let dataSize = vertexData.count * MemoryLayout.size(ofValue: vertexData[0])
-        vertexBuffer = metalDevice.makeBuffer(bytes: vertexData, length: dataSize, options: [])
+        let vertexDataSize = vertexData.count * MemoryLayout.size(ofValue: vertexData[0])
+        vertexBuffer = metalDevice.makeBuffer(bytes: vertexData, length: vertexDataSize, options: [])
         
+        //var matrixData = Array<Float>()
+        scaleMatrix = Matrix()
+        let matrixData = scaleMatrix.floatBuffer()
+        //for vertex in vertices {
+        //    vertexData += vertex.floatBuffer()
+        //}
+
+        let matrixDataSize = matrixData.count * MemoryLayout.size(ofValue: matrixData[0])
+        //let matrixDataSize = MemoryLayout.size(ofValue: matrixData)
+        uniformBuffer = metalDevice.makeBuffer(bytes: matrixData, length: matrixDataSize, options: [])
+
         samplerState = Node.defaultSampler(metalDevice)
         
         vertexCount = vertices.count
@@ -46,10 +59,19 @@ class Node {
         renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
         renderEncoder.setRenderPipelineState(pipelineState)
         renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
+        
+        //let nodeModelMatrix = self.modelMatrix()
+        //let bufferPointer = uniformBuffer.contents()
+        //memcpy(bufferPointer, nodeModelMatrix.raw(), MemoryLayout<Float>.size * Matrix4.numberOfElements())
+
+        renderEncoder.setVertexBuffer(uniformBuffer, offset: 0, index: 1)
+
+        
         renderEncoder.setFragmentTexture(texture, index: 0)
         if let samplerState = samplerState {
             renderEncoder.setFragmentSamplerState(samplerState, index: 0)
         }
+        
         renderEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: vertexCount, instanceCount: vertexCount/3)
         renderEncoder.endEncoding()
         
@@ -61,6 +83,8 @@ class Node {
         let pSamplerDescriptor:MTLSamplerDescriptor? = MTLSamplerDescriptor();
         
         if let sampler = pSamplerDescriptor {
+            //sampler.minFilter             = MTLSamplerMinMagFilter.linear
+            //sampler.magFilter             = MTLSamplerMinMagFilter.linear
             sampler.minFilter             = MTLSamplerMinMagFilter.nearest
             sampler.magFilter             = MTLSamplerMinMagFilter.nearest
             sampler.mipFilter             = MTLSamplerMipFilter.nearest
@@ -70,7 +94,7 @@ class Node {
             sampler.rAddressMode          = MTLSamplerAddressMode.clampToEdge
             sampler.normalizedCoordinates = true
             sampler.lodMinClamp           = 0
-            sampler.lodMaxClamp           = FLT_MAX
+            sampler.lodMaxClamp           = Float.greatestFiniteMagnitude
         }
         else {
             print(">> ERROR: Failed creating a sampler descriptor!")

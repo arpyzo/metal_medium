@@ -10,6 +10,11 @@
 
 using namespace metal;
 
+struct Uniforms{
+    float4x4 modelMatrix;
+};
+
+
 struct VertexIn {
     packed_float3 position;
     packed_float4 color;
@@ -30,11 +35,15 @@ struct VertexOut2 {
 };
 
 vertex VertexOut basic_vertex(const device VertexIn* vertex_array [[ buffer(0) ]],
+                              const device Uniforms&  uniforms    [[ buffer(1) ]],
                               unsigned int vid [[ vertex_id ]]) {
     VertexIn VertexIn = vertex_array[vid];
     
+    float4x4 mv_Matrix = uniforms.modelMatrix;
+    
     VertexOut VertexOut;
-    VertexOut.position = float4(VertexIn.position, 1);
+    //VertexOut.position = float4(VertexIn.position, 1);
+    VertexOut.position = mv_Matrix * float4(VertexIn.position,1);  //3
     VertexOut.color = VertexIn.color;
     VertexOut.texCoord = VertexIn.texCoord;
     
