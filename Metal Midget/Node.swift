@@ -36,7 +36,12 @@ class Node {
 
         let matrixDataSize = matrixData.count * MemoryLayout.size(ofValue: matrixData[0])
         //let matrixDataSize = MemoryLayout.size(ofValue: matrixData)
-        uniformBuffer = metalDevice.makeBuffer(bytes: matrixData, length: matrixDataSize, options: [])
+        
+        /* THIS WORKS */
+        //uniformBuffer = metalDevice.makeBuffer(bytes: matrixData, length: matrixDataSize, options: [])
+        
+        var mdata = scaleMatrix.rawFloat4x4()
+        uniformBuffer = metalDevice.makeBuffer(bytes: &mdata, length: matrixDataSize, options: [])
 
         samplerState = Node.defaultSampler(metalDevice)
         
