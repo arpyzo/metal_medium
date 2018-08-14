@@ -13,9 +13,10 @@ class Matrix {
     //var translationMatrix = matrix_identity_float4x4
     var m = matrix_identity_float4x4
 
+    // iPhone 8 1334-by-750
     init() {
-        m[0,0] = 0.5
-        m[1,1] = 1.5
+        //m[0,0] = 0.5
+        m[1,1] = 0.56
 
     }
         

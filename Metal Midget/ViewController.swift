@@ -27,7 +27,7 @@ class ViewController: UIViewController {
         metalDevice = MTLCreateSystemDefaultDevice()
         metalLayer = CAMetalLayer()
         metalLayer.device = metalDevice
-        metalLayer.frame = view.layer.frame
+        //metalLayer.frame = view.layer.frame
         view.layer.addSublayer(metalLayer)
         
         textureLoader = MTKTextureLoader(device: metalDevice)
@@ -57,6 +57,22 @@ class ViewController: UIViewController {
         
         timer = CADisplayLink(target: self, selector: #selector(ViewController.gameLoop))
         timer.add(to: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        if let window = view.window {
+            let scale = window.screen.nativeScale
+            let layerSize = view.bounds.size
+            //2
+            view.contentScaleFactor = scale
+            metalLayer.frame = CGRect(x: 0, y: 0, width: layerSize.width, height: layerSize.height)
+            metalLayer.drawableSize = CGSize(width: layerSize.width * scale, height: layerSize.height * scale)
+            
+            //projectionMatrix = Matrix4.makePerspectiveViewAngle(Matrix4.degrees(toRad: 85.0), aspectRatio: Float(self.view.bounds.size.width / self.view.bounds.size.height), nearZ: 0.01, farZ: 100.0)
+
+        }
     }
 
     override func didReceiveMemoryWarning() {
