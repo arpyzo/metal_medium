@@ -10,7 +10,13 @@ import UIKit
 import Metal
 import MetalKit
 
-class ViewController: UIViewController {
+protocol MetalViewControllerDelegate: class {
+    func updateLogic(timeSinceLastUpdate: CFTimeInterval)
+    func renderObjects(drawable: CAMetalDrawable)
+    func updateObjectScale(newSize: CGSize)
+}
+
+class MetalViewController: UIViewController {
     var metalDevice: MTLDevice!
     //var metalLayer: CAMetalLayer!
     var pipelineState: MTLRenderPipelineState!
@@ -18,14 +24,13 @@ class ViewController: UIViewController {
     var textureLoader: MTKTextureLoader!
     //var timer: CADisplayLink!
     
-    var texture: MTLTexture!
-    var objectToDraw: Rectangle!
+    weak var metalViewControllerDelegate: MetalViewControllerDelegate?
     
     @IBOutlet weak var mtkView: MTKView! {
         didSet {
             mtkView.delegate = self
             mtkView.preferredFramesPerSecond = 60
-            mtkView.clearColor = MTLClearColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
+            mtkView.clearColor = MTLClearColor(red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0)
         }
     }
     
@@ -40,19 +45,6 @@ class ViewController: UIViewController {
         //view.layer.addSublayer(metalLayer)
         
         textureLoader = MTKTextureLoader(device: metalDevice)
-        
-        //let path = Bundle.main.path(forResource: "zelda", ofType: "png")!
-        //let data = NSData(contentsOfFile: path) as! Data
-        //let texture = try! textureLoader.newTexture(with: data, options: [MTKTextureLoaderOptionSRGB : (false as NSNumber)])
-        //texture = try! textureLoader.newTexture(name: "zelda.png", scaleFactor: 1.0, bundle: Bundle.main, options: [MTKTextureLoader.Option.SRGB : (false as NSNumber)])
-        let path = Bundle.main.path(forResource: "zelda", ofType: "png")
-        //let textureLoader = MTKTextureLoader(device: device!)
-        texture = try! textureLoader.newTexture(URL: NSURL(fileURLWithPath: path!) as URL, options: nil)
-
-        //newTexture(name: "zelda.png", scaleFactor: CGFloat, bundle: Bundle?, options: [MTKTextureLoader.Option : Any]? = nil)
-
-
-        objectToDraw = Rectangle(metalDevice: metalDevice)
         
         let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
         let metalLibrary = metalDevice.makeDefaultLibrary()!
@@ -97,10 +89,8 @@ class ViewController: UIViewController {
     
     func render(_ drawable: CAMetalDrawable?) {
         guard let drawable = drawable else { return }
-        //self.metalViewControllerDelegate?.renderObjects(drawable)
-        objectToDraw.render(commandQueue: commandQueue, pipelineState: pipelineState, drawable: drawable, texture: texture)
+        self.metalViewControllerDelegate?.renderObjects(drawable: drawable)
     }
-
 
     /*@objc func gameLoop() {
         autoreleasepool {
@@ -110,16 +100,17 @@ class ViewController: UIViewController {
 
 }
 // MARK: - MTKViewDelegate
-extension ViewController: MTKViewDelegate {
+extension MetalViewController: MTKViewDelegate {
     
     // 1
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
-        if let window = view.window {
-            let scale = window.screen.nativeScale
+        self.metalViewControllerDelegate?.updateObjectScale(newSize: size)
+        //if let window = view.window {
+            //let scale = window.screen.nativeScale
             //let layerSize = view.bounds.size
-            view.contentScaleFactor = scale
+            //view.contentScaleFactor = scale
             //view.drawableSize = CGSize(width: layerSize.width * scale, height: layerSize.height * scale)
-        }
+        //}
         //currentDrawable.drawableSize = CGSize(width: 1.0, height: 1.0)
         //CGSize(width: layerSize.width * scale, height: layerSize.height * scale)
     }

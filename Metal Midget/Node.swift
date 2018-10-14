@@ -48,6 +48,11 @@ class Node {
         vertexCount = vertices.count
     }
     
+    func updateScale (scale: Float) {
+        scaleMatrix.m[1,1] = scale
+        // uniformBuffer is never updated
+    }
+    
     func render(commandQueue: MTLCommandQueue, pipelineState: MTLRenderPipelineState, drawable: CAMetalDrawable, texture: MTLTexture) {
     //func render(commandQueue: MTLCommandQueue, pipelineState: MTLRenderPipelineState, drawable: CAMetalDrawable) {
         let renderPassDescriptor = MTLRenderPassDescriptor()
