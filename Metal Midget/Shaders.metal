@@ -1,11 +1,3 @@
-//
-//  Shaders.metal
-//  Metal Midget
-//
-//  Created by Robert Pyzalski on 2/2/18.
-//  Copyright © 2018 Robert Pyzalski. All rights reserved.
-//
-
 #include <metal_stdlib>
 
 using namespace metal;

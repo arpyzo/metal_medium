@@ -1,11 +1,3 @@
-//
-//  Node.swift
-//  Metal Midget
-//
-//  Created by Robert Pyzalski on 6/23/18.
-//  Copyright © 2018 Robert Pyzalski. All rights reserved.
-//
-
 import Foundation
 import Metal
 import QuartzCore
@@ -16,9 +8,12 @@ class Node {
     var uniformBuffer: MTLBuffer!
     var samplerState: MTLSamplerState!
     var scaleMatrix: Matrix!
-
+    
+    var mDevice: MTLDevice!
     
     init(vertices: Array<Vertex>, metalDevice: MTLDevice) {
+        mDevice = metalDevice
+        
         var vertexData = Array<Float>()
         for vertex in vertices {
             vertexData += vertex.floatBuffer()
@@ -49,17 +44,20 @@ class Node {
     }
     
     func updateScale (scale: Float) {
+        print("THE SCALE \(scale)")
         scaleMatrix.m[1,1] = scale
+        let matrixData = scaleMatrix.floatBuffer()
+        var mdata = scaleMatrix.rawFloat4x4()
+        let matrixDataSize = matrixData.count * MemoryLayout.size(ofValue: matrixData[0])
+        uniformBuffer = mDevice.makeBuffer(bytes: &mdata, length: matrixDataSize, options: [])
         // uniformBuffer is never updated
     }
     
     func render(commandQueue: MTLCommandQueue, pipelineState: MTLRenderPipelineState, drawable: CAMetalDrawable, texture: MTLTexture) {
-    //func render(commandQueue: MTLCommandQueue, pipelineState: MTLRenderPipelineState, drawable: CAMetalDrawable) {
         let renderPassDescriptor = MTLRenderPassDescriptor()
         renderPassDescriptor.colorAttachments[0].texture = drawable.texture
         renderPassDescriptor.colorAttachments[0].loadAction = .clear
-        renderPassDescriptor.colorAttachments[0].clearColor =
-            MTLClearColor(red: 0.0, green: 104.0/255.0, blue: 5.0/255.0, alpha: 1.0)
+        renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColor(red: 0.0, green: 104.0/255.0, blue: 5.0/255.0, alpha: 1.0)
         renderPassDescriptor.colorAttachments[0].storeAction = .store
         
         var commandBuffer: MTLCommandBuffer!
