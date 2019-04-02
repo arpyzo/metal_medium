@@ -9,10 +9,11 @@
 /* Begin PBXBuildFile section */
 		D7147D182173A412006E6FA5 /* SceneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7147D172173A412006E6FA5 /* SceneViewController.swift */; };
 		D71C915720DF155C008C8B96 /* Vertex.swift in Sources */ = {isa = PBXBuildFile; fileRef = D71C915620DF155C008C8B96 /* Vertex.swift */; };
-		D71C915920DF173F008C8B96 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = D71C915820DF173F008C8B96 /* Node.swift */; };
+		D71C915920DF173F008C8B96 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D71C915820DF173F008C8B96 /* Renderer.swift */; };
 		D756A35D20F1D32F0079AEAF /* Rectangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = D756A35C20F1D32F0079AEAF /* Rectangle.swift */; };
 		D78F9F9721200B08008634FC /* Matrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = D78F9F9621200B08008634FC /* Matrix.swift */; };
 		D7AFF1B921141E2500CF120F /* zelda.png in Resources */ = {isa = PBXBuildFile; fileRef = D7AFF1B821141E2500CF120F /* zelda.png */; };
+		D7C1521222530E630017C0FB /* Rectangle2.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7C1521122530E630017C0FB /* Rectangle2.swift */; };
 		D7C7C0FD20E1FE31001CAF70 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7C7C0FB20E1FE31001CAF70 /* Main.storyboard */; };
 		D7C7C0FE20E1FE31001CAF70 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7C7C0FC20E1FE31001CAF70 /* LaunchScreen.storyboard */; };
 		D7D9B9EB202587C0000C79B7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D9B9EA202587C0000C79B7 /* AppDelegate.swift */; };
@@ -23,10 +24,11 @@
 /* Begin PBXFileReference section */
 		D7147D172173A412006E6FA5 /* SceneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneViewController.swift; sourceTree = "<group>"; };
 		D71C915620DF155C008C8B96 /* Vertex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vertex.swift; sourceTree = "<group>"; };
-		D71C915820DF173F008C8B96 /* Node.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
+		D71C915820DF173F008C8B96 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		D756A35C20F1D32F0079AEAF /* Rectangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rectangle.swift; sourceTree = "<group>"; };
 		D78F9F9621200B08008634FC /* Matrix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Matrix.swift; sourceTree = "<group>"; };
 		D7AFF1B821141E2500CF120F /* zelda.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = zelda.png; sourceTree = "<group>"; };
+		D7C1521122530E630017C0FB /* Rectangle2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rectangle2.swift; sourceTree = "<group>"; };
 		D7C7C0FB20E1FE31001CAF70 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		D7C7C0FC20E1FE31001CAF70 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D7D9B9E7202587C0000C79B7 /* Metal Midget.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Metal Midget.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -74,10 +76,11 @@
 				D7D9B9FC20258F93000C79B7 /* Shaders.metal */,
 				D7D9B9F6202587C0000C79B7 /* Info.plist */,
 				D71C915620DF155C008C8B96 /* Vertex.swift */,
-				D71C915820DF173F008C8B96 /* Node.swift */,
+				D71C915820DF173F008C8B96 /* Renderer.swift */,
 				D756A35C20F1D32F0079AEAF /* Rectangle.swift */,
 				D78F9F9621200B08008634FC /* Matrix.swift */,
 				D7147D172173A412006E6FA5 /* SceneViewController.swift */,
+				D7C1521122530E630017C0FB /* Rectangle2.swift */,
 			);
 			path = "Metal Midget";
 			sourceTree = "<group>";
@@ -157,7 +160,8 @@
 			files = (
 				D7147D182173A412006E6FA5 /* SceneViewController.swift in Sources */,
 				D7D9B9FD20258F93000C79B7 /* Shaders.metal in Sources */,
-				D71C915920DF173F008C8B96 /* Node.swift in Sources */,
+				D7C1521222530E630017C0FB /* Rectangle2.swift in Sources */,
+				D71C915920DF173F008C8B96 /* Renderer.swift in Sources */,
 				D71C915720DF155C008C8B96 /* Vertex.swift in Sources */,
 				D756A35D20F1D32F0079AEAF /* Rectangle.swift in Sources */,
 				D78F9F9721200B08008634FC /* Matrix.swift in Sources */,

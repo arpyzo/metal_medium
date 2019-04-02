@@ -2,36 +2,45 @@ import Foundation
 import Metal
 import QuartzCore
 
-class Node {
-    var vertexCount: Int
-    var vertexBuffer: MTLBuffer!
+class Renderer {
+    var vertexCount1: Int
+    var vertexCount2: Int
+    var vertexBuffer1: MTLBuffer!
+    var vertexBuffer2: MTLBuffer!
     var uniformBuffer: MTLBuffer!
     var samplerState: MTLSamplerState!
     var scaleMatrix: Matrix!
     
-    var mDevice: MTLDevice!
+    var metalDevice: MTLDevice!
     
-    init(vertices: Array<Vertex>, metalDevice: MTLDevice) {
-        mDevice = metalDevice
+    init(metalDevice: MTLDevice) {
+        self.metalDevice = metalDevice
         
         // TODO: Create here or in Rectangle?
-        var vertexData = Array<Float>()
-        for vertex in vertices {
-            vertexData += vertex.floatBuffer()
-        }
+        //var vertexData = Array<Float>()
+        //for vertex in vertices {
+        //    vertexData += vertex.floatBuffer()
+        //}
         
-        let vertexDataSize = vertexData.count * MemoryLayout.size(ofValue: vertexData[0])
-        vertexBuffer = metalDevice.makeBuffer(bytes: vertexData, length: vertexDataSize, options: [])
+        //let vertexDataSize = vertexData.count * MemoryLayout.size(ofValue: vertexData[0])
+        //vertexBuffer = metalDevice.makeBuffer(bytes: vertexData, length: vertexDataSize, options: [])
         
+        let r1 = Rectangle()
+        let r2 = Rectangle2()
+        
+        vertexBuffer1 = metalDevice.makeBuffer(bytes: r1.getVertexData(), length: r1.getDataSize(), options: [])
+        vertexBuffer2 = metalDevice.makeBuffer(bytes: r2.getVertexData(), length: r2.getDataSize(), options: [])
+
         // TODO: Create here or in Matrix?
         scaleMatrix = Matrix()
         var matrixData = scaleMatrix.rawFloat4x4()
         let matrixDataSize = MemoryLayout.size(ofValue: matrixData)
         uniformBuffer = metalDevice.makeBuffer(bytes: &matrixData, length: matrixDataSize, options: [])
         
-        samplerState = Node.defaultSampler(metalDevice)
+        samplerState = Renderer.defaultSampler(metalDevice)
         
-        vertexCount = vertices.count
+        vertexCount1 = r1.getVertexData().count
+        vertexCount2 = r2.getVertexData().count
     }
     
     func updateScale(scale: Float) {
@@ -39,7 +48,7 @@ class Node {
         scaleMatrix.m[1,1] = scale
         var matrixData = scaleMatrix.rawFloat4x4()
         let matrixDataSize = MemoryLayout.size(ofValue: matrixData)
-        uniformBuffer = mDevice.makeBuffer(bytes: &matrixData, length: matrixDataSize, options: [])
+        uniformBuffer = metalDevice.makeBuffer(bytes: &matrixData, length: matrixDataSize, options: [])
     }
     
     func render(commandQueue: MTLCommandQueue, pipelineState: MTLRenderPipelineState, drawable: CAMetalDrawable, texture: MTLTexture) {
@@ -55,7 +64,8 @@ class Node {
         var renderEncoder: MTLRenderCommandEncoder!
         renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
         renderEncoder.setRenderPipelineState(pipelineState)
-        renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
+        
+        renderEncoder.setVertexBuffer(vertexBuffer1, offset: 0, index: 0)
         renderEncoder.setVertexBuffer(uniformBuffer, offset: 0, index: 1)
 
         renderEncoder.setFragmentTexture(texture, index: 0)
@@ -63,7 +73,18 @@ class Node {
             renderEncoder.setFragmentSamplerState(samplerState, index: 0)
         }
         
-        renderEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: vertexCount, instanceCount: vertexCount/3)
+        renderEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: vertexCount1, instanceCount: vertexCount1/3)
+        
+        renderEncoder.setVertexBuffer(vertexBuffer2, offset: 0, index: 0)
+        renderEncoder.setVertexBuffer(uniformBuffer, offset: 0, index: 1)
+        
+        renderEncoder.setFragmentTexture(texture, index: 0)
+        if let samplerState = samplerState {
+            renderEncoder.setFragmentSamplerState(samplerState, index: 0)
+        }
+        
+        renderEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: vertexCount2, instanceCount: vertexCount2/3)
+        
         renderEncoder.endEncoding()
         
         commandBuffer.present(drawable)
