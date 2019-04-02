@@ -15,12 +15,10 @@ class SceneViewController: MetalViewController, MetalViewControllerDelegate {
         self.metalViewControllerDelegate = self
     }
     
-    //MetalViewControllerDelegate calls this:
     func renderObjects(drawable:CAMetalDrawable) {
         objectToDraw.render(commandQueue: commandQueue, pipelineState: pipelineState, drawable: drawable, texture: texture)
     }
     
-    //MetalViewControllerDelegate calls this:
     func updateObjectScale(newSize: CGSize) {
         // TODO: This isn't scale. It's a ratio
         objectToDraw.updateScale(scale: Float(newSize.width / newSize.height))

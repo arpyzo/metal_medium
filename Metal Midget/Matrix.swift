@@ -21,7 +21,7 @@ class Matrix {
     }
         
     
-    func floatBuffer() -> [Float] {
+    /*func floatBuffer() -> [Float] {
         //return (0..<16).map { i in matrix.m[i] }
         //return (0..<16).map { i in translationMatrix.subscript(i) }
         //return translationMatrix
@@ -30,7 +30,7 @@ class Matrix {
                 m[2,0], m[2,1], m[2,2], m[2,3],
                 m[3,0], m[3,1], m[3,2], m[3,3]
                ]
-    }
+    }*/
     
     func rawFloat4x4() -> float4x4 {
         return m

@@ -14,6 +14,7 @@ class Node {
     init(vertices: Array<Vertex>, metalDevice: MTLDevice) {
         mDevice = metalDevice
         
+        // TODO: Create here or in Rectangle?
         var vertexData = Array<Float>()
         for vertex in vertices {
             vertexData += vertex.floatBuffer()
@@ -22,35 +23,23 @@ class Node {
         let vertexDataSize = vertexData.count * MemoryLayout.size(ofValue: vertexData[0])
         vertexBuffer = metalDevice.makeBuffer(bytes: vertexData, length: vertexDataSize, options: [])
         
-        //var matrixData = Array<Float>()
+        // TODO: Create here or in Matrix?
         scaleMatrix = Matrix()
-        let matrixData = scaleMatrix.floatBuffer()
-        //for vertex in vertices {
-        //    vertexData += vertex.floatBuffer()
-        //}
-
-        let matrixDataSize = matrixData.count * MemoryLayout.size(ofValue: matrixData[0])
-        //let matrixDataSize = MemoryLayout.size(ofValue: matrixData)
+        var matrixData = scaleMatrix.rawFloat4x4()
+        let matrixDataSize = MemoryLayout.size(ofValue: matrixData)
+        uniformBuffer = metalDevice.makeBuffer(bytes: &matrixData, length: matrixDataSize, options: [])
         
-        /* THIS WORKS */
-        //uniformBuffer = metalDevice.makeBuffer(bytes: matrixData, length: matrixDataSize, options: [])
-        
-        var mdata = scaleMatrix.rawFloat4x4()
-        uniformBuffer = metalDevice.makeBuffer(bytes: &mdata, length: matrixDataSize, options: [])
-
         samplerState = Node.defaultSampler(metalDevice)
         
         vertexCount = vertices.count
     }
     
-    func updateScale (scale: Float) {
-        print("THE SCALE \(scale)")
+    func updateScale(scale: Float) {
+        print("New scale: \(scale)")
         scaleMatrix.m[1,1] = scale
-        let matrixData = scaleMatrix.floatBuffer()
-        var mdata = scaleMatrix.rawFloat4x4()
-        let matrixDataSize = matrixData.count * MemoryLayout.size(ofValue: matrixData[0])
-        uniformBuffer = mDevice.makeBuffer(bytes: &mdata, length: matrixDataSize, options: [])
-        // uniformBuffer is never updated
+        var matrixData = scaleMatrix.rawFloat4x4()
+        let matrixDataSize = MemoryLayout.size(ofValue: matrixData)
+        uniformBuffer = mDevice.makeBuffer(bytes: &matrixData, length: matrixDataSize, options: [])
     }
     
     func render(commandQueue: MTLCommandQueue, pipelineState: MTLRenderPipelineState, drawable: CAMetalDrawable, texture: MTLTexture) {
@@ -67,14 +56,8 @@ class Node {
         renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
         renderEncoder.setRenderPipelineState(pipelineState)
         renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
-        
-        //let nodeModelMatrix = self.modelMatrix()
-        //let bufferPointer = uniformBuffer.contents()
-        //memcpy(bufferPointer, nodeModelMatrix.raw(), MemoryLayout<Float>.size * Matrix4.numberOfElements())
-
         renderEncoder.setVertexBuffer(uniformBuffer, offset: 0, index: 1)
 
-        
         renderEncoder.setFragmentTexture(texture, index: 0)
         if let samplerState = samplerState {
             renderEncoder.setFragmentSamplerState(samplerState, index: 0)
@@ -105,7 +88,7 @@ class Node {
             sampler.lodMaxClamp           = Float.greatestFiniteMagnitude
         }
         else {
-            print(">> ERROR: Failed creating a sampler descriptor!")
+            print("ERROR: Failed creating a sampler descriptor!")
         }
         return device.makeSamplerState(descriptor: pSamplerDescriptor!)!
     }
