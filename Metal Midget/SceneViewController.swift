@@ -1,28 +1,58 @@
 import UIKit
+import MetalKit
 import simd
 
-class SceneViewController: MetalViewController, MetalViewControllerDelegate {
-    var texture: MTLTexture!
+class SceneViewController: UIViewController {
+    var mtkView: MTKView {
+        return view as! MTKView
+    }
+
+    //var texture: MTLTexture!
+    //var mtkView: MTKView!
     var renderer: Renderer!
     
     override func viewDidLoad() {
-        super.viewDidLoad()
+        //super.viewDidLoad()
         
-        let path = Bundle.main.path(forResource: "zelda", ofType: "png")!
-        texture = try! textureLoader.newTexture(URL: NSURL(fileURLWithPath: path) as URL, options: nil)
+        //let path = Bundle.main.path(forResource: "zelda", ofType: "png")!
+        //texture = try! textureLoader.newTexture(URL: NSURL(fileURLWithPath: path) as URL, options: nil)
         //objectToDraw = Rectangle(metalDevice: metalDevice)
-        renderer = Renderer(metalDevice: metalDevice)
         
-        self.metalViewControllerDelegate = self
+        
+        //let metalDevice = MTLCreateSystemDefaultDevice()!
+        
+        //mtkView = MTKView()
+        //mtkView.device = metalDevice
+        //mtkView.preferredFramesPerSecond = 60
+        //mtkView.clearColor = MTLClearColor(red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0)
+        
+        /*mtkView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(mtkView)
+        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "|[mtkView]|", options: [], metrics: nil, views: ["mtkView" : mtkView]))
+        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[mtkView]|", options: [], metrics: nil, views: ["mtkView" : mtkView]))*/
+        
+        let metalDevice = MTLCreateSystemDefaultDevice()!
+        mtkView.device = metalDevice
+        
+        //renderer = Renderer(metalDevice: metalDevice, mtkView: mtkView)
+        renderer = Renderer(metalDevice: metalDevice)
+        mtkView.delegate = renderer
+
+        
+        //self.metalViewControllerDelegate = self
     }
     
-    func renderObjects(drawable: CAMetalDrawable) {
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+    
+    /*func renderObjects(drawable: CAMetalDrawable) {
         renderer.render(commandQueue: commandQueue, pipelineState: pipelineState, drawable: drawable, texture: texture)
-    }
+    }*/
     
-    func updateObjectScale(newSize: CGSize) {
+    /*func updateObjectScale(newSize: CGSize) {
         renderer.updateScale(newSize: newSize)
-    }
+    }*/
     
     func updateLogic(timeSinceLastUpdate: CFTimeInterval) {
         // NO-OP
