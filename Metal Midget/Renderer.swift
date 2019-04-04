@@ -16,15 +16,6 @@ class Renderer {
     init(metalDevice: MTLDevice) {
         self.metalDevice = metalDevice
         
-        // TODO: Create here or in Rectangle?
-        //var vertexData = Array<Float>()
-        //for vertex in vertices {
-        //    vertexData += vertex.floatBuffer()
-        //}
-        
-        //let vertexDataSize = vertexData.count * MemoryLayout.size(ofValue: vertexData[0])
-        //vertexBuffer = metalDevice.makeBuffer(bytes: vertexData, length: vertexDataSize, options: [])
-        
         let r1 = Rectangle()
         let r2 = Rectangle2()
         
@@ -43,9 +34,18 @@ class Renderer {
         vertexCount2 = r2.getVertexData().count
     }
     
-    func updateScale(scale: Float) {
-        print("New scale: \(scale)")
-        scaleMatrix.m[1,1] = scale
+    //func updateScale(scale: Float) {
+    func updateScale(newSize: CGSize) {
+        print("New screen size. Width: \(newSize.width), Height: \(newSize.height)")
+        
+        if (newSize.height > newSize.width) {
+            scaleMatrix.m[0,0] = 1
+            scaleMatrix.m[1,1] = Float(newSize.width / newSize.height)
+        } else {
+            scaleMatrix.m[0,0] = Float(newSize.height / newSize.width)
+            scaleMatrix.m[1,1] = 1
+        }
+        
         var matrixData = scaleMatrix.rawFloat4x4()
         let matrixDataSize = MemoryLayout.size(ofValue: matrixData)
         uniformBuffer = metalDevice.makeBuffer(bytes: &matrixData, length: matrixDataSize, options: [])
@@ -75,7 +75,7 @@ class Renderer {
         
         renderEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: vertexCount1, instanceCount: vertexCount1/3)
         
-        renderEncoder.setVertexBuffer(vertexBuffer2, offset: 0, index: 0)
+        /*renderEncoder.setVertexBuffer(vertexBuffer2, offset: 0, index: 0)
         renderEncoder.setVertexBuffer(uniformBuffer, offset: 0, index: 1)
         
         renderEncoder.setFragmentTexture(texture, index: 0)
@@ -83,7 +83,7 @@ class Renderer {
             renderEncoder.setFragmentSamplerState(samplerState, index: 0)
         }
         
-        renderEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: vertexCount2, instanceCount: vertexCount2/3)
+        renderEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: vertexCount2, instanceCount: vertexCount2/3)*/
         
         renderEncoder.endEncoding()
         

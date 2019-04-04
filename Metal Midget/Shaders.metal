@@ -30,7 +30,7 @@ vertex VertexOut basic_vertex(const device VertexIn* vertex_array [[ buffer(0) ]
                               unsigned int vid [[ vertex_id ]]) {
     VertexIn VertexIn = vertex_array[vid];
     
-    float4x4 mv_Matrix = uniforms.modelMatrix;
+    float4x4 mv_Matrix = uniforms.modelMatrix; // model view matrix
     
     VertexOut VertexOut;
     //VertexOut.position = float4(VertexIn.position, 1);
