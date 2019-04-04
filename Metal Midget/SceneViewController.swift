@@ -3,6 +3,10 @@ import MetalKit
 import simd
 
 class SceneViewController: UIViewController {
+    override func loadView() {
+        self.view = MTKView()
+    }
+    
     var mtkView: MTKView {
         return view as! MTKView
     }
