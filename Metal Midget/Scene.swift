@@ -1,6 +1,8 @@
 import MetalKit
 
 class Scene {
+    var clearColor: MTLClearColor
+    
     var textureLoader: MTKTextureLoader!
     var texture: MTLTexture!
     
@@ -9,7 +11,9 @@ class Scene {
     var vertexBuffer1: MTLBuffer!
     var vertexBuffer2: MTLBuffer!
     
-    init(metalDevice: MTLDevice) {
+    init(_ metalDevice: MTLDevice) {
+        clearColor = MTLClearColor(red: 0.0, green: 104.0/255.0, blue: 5.0/255.0, alpha: 1.0)
+        
         textureLoader = MTKTextureLoader(device: metalDevice)
         
         let path = Bundle.main.path(forResource: "zelda", ofType: "png")!

@@ -3,7 +3,7 @@ import simd
 // iPhone 8 - 750 x 1334
 
 class Matrix {
-    var matrix = matrix_identity_float4x4
+    var screenRatioMatrix = matrix_identity_float4x4
 
     /*func floatBuffer() -> [Float] {
         //return (0..<16).map { i in matrix.m[i] }
@@ -16,7 +16,17 @@ class Matrix {
                ]
     }*/
     
-    func rawFloat4x4() -> float4x4 {
-        return matrix
+    func screenRatioFloat4x4() -> float4x4 {
+        return screenRatioMatrix
+    }
+    
+    func updateRatioMatrix(width: Float, height: Float) {
+        if (height > width) {
+            screenRatioMatrix[0,0] = 1
+            screenRatioMatrix[1,1] = width / height
+        } else {
+            screenRatioMatrix[0,0] = height / width
+            screenRatioMatrix[1,1] = 1
+        }
     }
 }

@@ -1,5 +1,4 @@
 import MetalKit
-import QuartzCore
 
 class Renderer: NSObject, MTKViewDelegate {
     var metalDevice: MTLDevice!
@@ -7,18 +6,20 @@ class Renderer: NSObject, MTKViewDelegate {
     var renderPipeline: MTLRenderPipelineState!
     var commandQueue: MTLCommandQueue!
     var textureLoader: MTKTextureLoader!
-    
-    var uniformBuffer: MTLBuffer!
-    var samplerState: MTLSamplerState!
-    var modelMatrix: Matrix!
-    
+    var textureSampler: MTLSamplerState!
+
     var scene: Scene!
-        
-    init(metalDevice: MTLDevice) {
+    var modelMatrix: Matrix!
+    var uniformBuffer: MTLBuffer!
+
+    init(_ metalDevice: MTLDevice) {
         self.metalDevice = metalDevice
         
         let metalLibrary = metalDevice.makeDefaultLibrary()!
         
+        let samplerDescriptor: MTLSamplerDescriptor! = MTLSamplerDescriptor()
+        textureSampler = metalDevice.makeSamplerState(descriptor: samplerDescriptor)
+
         let pipelineDescriptor = MTLRenderPipelineDescriptor()
         pipelineDescriptor.vertexFunction = metalLibrary.makeFunction(name: "basic_vertex")
         pipelineDescriptor.fragmentFunction = metalLibrary.makeFunction(name: "basic_fragment")
@@ -26,29 +27,17 @@ class Renderer: NSObject, MTKViewDelegate {
         renderPipeline = try! metalDevice.makeRenderPipelineState(descriptor: pipelineDescriptor)
         
         commandQueue = metalDevice.makeCommandQueue()
-        
-        modelMatrix = Matrix()
-        var matrixData = modelMatrix.rawFloat4x4()
-        let matrixDataSize = MemoryLayout.size(ofValue: matrixData)
-        uniformBuffer = metalDevice.makeBuffer(bytes: &matrixData, length: matrixDataSize, options: [])
-        
-        samplerState = Renderer.defaultSampler(metalDevice)
     }
     
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         print("New screen size. Width: \(size.width), Height: \(size.height)")
         
-        if (size.height > size.width) {
-            modelMatrix.matrix[0,0] = 1
-            modelMatrix.matrix[1,1] = Float(size.width / size.height)
-        } else {
-            modelMatrix.matrix[0,0] = Float(size.height / size.width)
-            modelMatrix.matrix[1,1] = 1
-        }
+        modelMatrix = modelMatrix ?? Matrix()
+        modelMatrix.updateRatioMatrix(width: Float(size.width), height: Float(size.height))
         
-        var matrixData = modelMatrix.rawFloat4x4()
-        let matrixDataSize = MemoryLayout.size(ofValue: matrixData)
-        uniformBuffer = metalDevice.makeBuffer(bytes: &matrixData, length: matrixDataSize, options: [])
+        uniformBuffer = metalDevice.makeBuffer(bytes: &modelMatrix.screenRatioMatrix,
+                                               length: MemoryLayout.size(ofValue: modelMatrix.screenRatioMatrix),
+                                               options: [])
     }
     
     func draw(in view: MTKView) {
@@ -65,7 +54,7 @@ class Renderer: NSObject, MTKViewDelegate {
         let renderPassDescriptor = MTLRenderPassDescriptor()
         renderPassDescriptor.colorAttachments[0].texture = drawable.texture
         renderPassDescriptor.colorAttachments[0].loadAction = .clear
-        renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColor(red: 0.0, green: 104.0/255.0, blue: 5.0/255.0, alpha: 1.0)
+        renderPassDescriptor.colorAttachments[0].clearColor = scene.clearColor
         renderPassDescriptor.colorAttachments[0].storeAction = .store
         
         var commandBuffer: MTLCommandBuffer!
@@ -73,15 +62,13 @@ class Renderer: NSObject, MTKViewDelegate {
         
         var renderEncoder: MTLRenderCommandEncoder!
         renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
-        renderEncoder.setRenderPipelineState(pipelineState)
+        renderEncoder.setRenderPipelineState(renderPipeline)
         
         renderEncoder.setVertexBuffer(scene.vertexBuffer1, offset: 0, index: 0)
         renderEncoder.setVertexBuffer(uniformBuffer, offset: 0, index: 1)
 
         renderEncoder.setFragmentTexture(scene.texture, index: 0)
-        if let samplerState = samplerState {
-            renderEncoder.setFragmentSamplerState(samplerState, index: 0)
-        }
+        renderEncoder.setFragmentSamplerState(textureSampler, index: 0)
         
         renderEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: scene.vertexCount1, instanceCount: scene.vertexCount1 / 3)
         
@@ -99,28 +86,5 @@ class Renderer: NSObject, MTKViewDelegate {
         
         commandBuffer.present(drawable)
         commandBuffer.commit()
-    }
-    
-    class func defaultSampler(_ device: MTLDevice) -> MTLSamplerState {
-        let pSamplerDescriptor:MTLSamplerDescriptor? = MTLSamplerDescriptor();
-        
-        if let sampler = pSamplerDescriptor {
-            //sampler.minFilter             = MTLSamplerMinMagFilter.linear
-            //sampler.magFilter             = MTLSamplerMinMagFilter.linear
-            sampler.minFilter             = MTLSamplerMinMagFilter.nearest
-            sampler.magFilter             = MTLSamplerMinMagFilter.nearest
-            sampler.mipFilter             = MTLSamplerMipFilter.nearest
-            sampler.maxAnisotropy         = 1
-            sampler.sAddressMode          = MTLSamplerAddressMode.clampToEdge
-            sampler.tAddressMode          = MTLSamplerAddressMode.clampToEdge
-            sampler.rAddressMode          = MTLSamplerAddressMode.clampToEdge
-            sampler.normalizedCoordinates = true
-            sampler.lodMinClamp           = 0
-            sampler.lodMaxClamp           = Float.greatestFiniteMagnitude
-        }
-        else {
-            print("ERROR: Failed creating a sampler descriptor!")
-        }
-        return device.makeSamplerState(descriptor: pSamplerDescriptor!)!
     }
 }

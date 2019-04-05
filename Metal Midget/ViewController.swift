@@ -17,10 +17,10 @@ class ViewController: UIViewController {
         let metalDevice = MTLCreateSystemDefaultDevice()!
         mtkView.device = metalDevice
         
-        renderer = Renderer(metalDevice: metalDevice)
+        renderer = Renderer(metalDevice)
         mtkView.delegate = renderer
         
-        scene = Scene(metalDevice: metalDevice)
+        scene = Scene(metalDevice)
         renderer.scene = scene
     }
     
