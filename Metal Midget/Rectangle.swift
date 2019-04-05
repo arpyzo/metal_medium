@@ -1,7 +1,8 @@
 class Rectangle {
-    var vertexDataSize: Int
     var vertexData: Array<Float>
-    
+    var vertexDataSize: Int
+    var vertexCount: Int
+
     init() {
         // x, y, z = 0
         // r, g, b, a = 1 (TODO: needed if texture?)
@@ -23,13 +24,7 @@ class Rectangle {
         }
         
         vertexDataSize = vertexData.count * MemoryLayout.size(ofValue: vertexData[0])
-    }
-    
-    func getDataSize() -> Int {
-        return vertexDataSize
-    }
-    
-    func getVertexData() -> Array<Float> {
-        return vertexData
+        
+        vertexCount = vertexData.count
     }
 }

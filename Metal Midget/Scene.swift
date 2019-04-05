@@ -25,10 +25,10 @@ class Scene {
         let r1 = Rectangle()
         let r2 = Rectangle2()
         
-        vertexCount1 = r1.getVertexData().count
-        vertexCount2 = r2.getVertexData().count
-        
-        vertexBuffer1 = metalDevice.makeBuffer(bytes: r1.getVertexData(), length: r1.getDataSize(), options: [])
-        vertexBuffer2 = metalDevice.makeBuffer(bytes: r2.getVertexData(), length: r2.getDataSize(), options: [])
+        vertexCount1 = r1.vertexCount
+        vertexCount2 = r2.vertexCount
+
+        vertexBuffer1 = metalDevice.makeBuffer(bytes: &r1.vertexData, length: r1.vertexDataSize, options: [])
+        vertexBuffer2 = metalDevice.makeBuffer(bytes: &r2.vertexData, length: r2.vertexDataSize, options: [])
     }
 }

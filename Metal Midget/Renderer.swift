@@ -9,7 +9,7 @@ class Renderer: NSObject, MTKViewDelegate {
     var textureSampler: MTLSamplerState!
 
     var scene: Scene!
-    var modelMatrix: Matrix!
+    var modelMatrix: ModelMatrix!
     var uniformBuffer: MTLBuffer!
 
     init(_ metalDevice: MTLDevice) {
@@ -32,7 +32,7 @@ class Renderer: NSObject, MTKViewDelegate {
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         print("New screen size. Width: \(size.width), Height: \(size.height)")
         
-        modelMatrix = modelMatrix ?? Matrix()
+        modelMatrix = modelMatrix ?? ModelMatrix()
         modelMatrix.updateRatioMatrix(width: Float(size.width), height: Float(size.height))
         
         uniformBuffer = metalDevice.makeBuffer(bytes: &modelMatrix.screenRatioMatrix,
@@ -54,17 +54,18 @@ class Renderer: NSObject, MTKViewDelegate {
         var commandBuffer: MTLCommandBuffer!
         commandBuffer = commandQueue.makeCommandBuffer()
         
-        // LOOP START
-        
         let renderPassDescriptor = MTLRenderPassDescriptor()
         renderPassDescriptor.colorAttachments[0].clearColor = scene.clearColor
         renderPassDescriptor.colorAttachments[0].texture = drawable.texture
+            // TODO: change to "dontcare" once drawing entire screen
         renderPassDescriptor.colorAttachments[0].loadAction = .clear
         renderPassDescriptor.colorAttachments[0].storeAction = .store
         
         var renderEncoder: MTLRenderCommandEncoder!
         renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
         renderEncoder.setRenderPipelineState(renderPipeline)
+        
+        // LOOP START
         
         renderEncoder.setVertexBuffer(scene.vertexBuffer1, offset: 0, index: 0)
         renderEncoder.setVertexBuffer(uniformBuffer, offset: 0, index: 1)
