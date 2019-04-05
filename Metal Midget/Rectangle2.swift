@@ -1,6 +1,3 @@
-import Foundation
-import Metal
-
 class Rectangle2 {
     var vertexDataSize: Int
     var vertexData: Array<Float>

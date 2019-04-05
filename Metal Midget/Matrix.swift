@@ -1,26 +1,10 @@
-//
-//  Matrix.swift
-//  Metal Midget
-//
-//  Created by Robert Pyzalski on 8/11/18.
-//  Copyright © 2018 Robert Pyzalski. All rights reserved.
-//
-
-import Foundation
 import simd
 
+// iPhone 8 - 750 x 1334
+
 class Matrix {
-    //var translationMatrix = matrix_identity_float4x4
-    var m = matrix_identity_float4x4
+    var matrix = matrix_identity_float4x4
 
-    // iPhone 8 1334-by-750
-    init() {
-        //m[0,0] = 0.5
-        m[1,1] = 0.56
-
-    }
-        
-    
     /*func floatBuffer() -> [Float] {
         //return (0..<16).map { i in matrix.m[i] }
         //return (0..<16).map { i in translationMatrix.subscript(i) }
@@ -33,6 +17,6 @@ class Matrix {
     }*/
     
     func rawFloat4x4() -> float4x4 {
-        return m
+        return matrix
     }
 }
