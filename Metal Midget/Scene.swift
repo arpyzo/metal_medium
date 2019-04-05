@@ -4,8 +4,9 @@ class Scene {
     var clearColor: MTLClearColor
     
     var textureLoader: MTKTextureLoader!
-    var texture: MTLTexture!
-    
+    var texture1: MTLTexture!
+    var texture2: MTLTexture!
+
     var vertexCount1: Int
     var vertexCount2: Int
     var vertexBuffer1: MTLBuffer!
@@ -16,9 +17,11 @@ class Scene {
         
         textureLoader = MTKTextureLoader(device: metalDevice)
         
-        let path = Bundle.main.path(forResource: "zelda", ofType: "png")!
-        texture = try! textureLoader.newTexture(URL: NSURL(fileURLWithPath: path) as URL, options: nil)
-        
+        let path1 = Bundle.main.path(forResource: "zelda", ofType: "png")!
+        texture1 = try! textureLoader.newTexture(URL: NSURL(fileURLWithPath: path1) as URL, options: nil)
+        let path2 = Bundle.main.path(forResource: "sun", ofType: "png")!
+        texture2 = try! textureLoader.newTexture(URL: NSURL(fileURLWithPath: path2) as URL, options: nil)
+
         let r1 = Rectangle()
         let r2 = Rectangle2()
         

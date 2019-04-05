@@ -18,6 +18,7 @@
 		D7C7C0FE20E1FE31001CAF70 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7C7C0FC20E1FE31001CAF70 /* LaunchScreen.storyboard */; };
 		D7D9B9EB202587C0000C79B7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D9B9EA202587C0000C79B7 /* AppDelegate.swift */; };
 		D7D9B9FD20258F93000C79B7 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = D7D9B9FC20258F93000C79B7 /* Shaders.metal */; };
+		D7F285B02257B3AA00B18178 /* sun.png in Resources */ = {isa = PBXBuildFile; fileRef = D7F285AF2257B3AA00B18178 /* sun.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		D7D9B9EA202587C0000C79B7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D7D9B9F6202587C0000C79B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D7D9B9FC20258F93000C79B7 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
+		D7F285AF2257B3AA00B18178 /* sun.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sun.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +69,7 @@
 			isa = PBXGroup;
 			children = (
 				D7AFF1B821141E2500CF120F /* zelda.png */,
+				D7F285AF2257B3AA00B18178 /* sun.png */,
 				D7C7C0FC20E1FE31001CAF70 /* LaunchScreen.storyboard */,
 				D7D9B9EA202587C0000C79B7 /* AppDelegate.swift */,
 				D7D9B9FC20258F93000C79B7 /* Shaders.metal */,
@@ -142,6 +145,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D7F285B02257B3AA00B18178 /* sun.png in Resources */,
 				D7C7C0FE20E1FE31001CAF70 /* LaunchScreen.storyboard in Resources */,
 				D7AFF1B921141E2500CF120F /* zelda.png in Resources */,
 			);

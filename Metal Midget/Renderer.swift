@@ -51,14 +51,16 @@ class Renderer: NSObject, MTKViewDelegate {
         if (scene == nil) { return }
         guard let drawable = view.currentDrawable else { return }
         
-        let renderPassDescriptor = MTLRenderPassDescriptor()
-        renderPassDescriptor.colorAttachments[0].texture = drawable.texture
-        renderPassDescriptor.colorAttachments[0].loadAction = .clear
-        renderPassDescriptor.colorAttachments[0].clearColor = scene.clearColor
-        renderPassDescriptor.colorAttachments[0].storeAction = .store
-        
         var commandBuffer: MTLCommandBuffer!
         commandBuffer = commandQueue.makeCommandBuffer()
+        
+        // LOOP START
+        
+        let renderPassDescriptor = MTLRenderPassDescriptor()
+        renderPassDescriptor.colorAttachments[0].clearColor = scene.clearColor
+        renderPassDescriptor.colorAttachments[0].texture = drawable.texture
+        renderPassDescriptor.colorAttachments[0].loadAction = .clear
+        renderPassDescriptor.colorAttachments[0].storeAction = .store
         
         var renderEncoder: MTLRenderCommandEncoder!
         renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
@@ -67,20 +69,22 @@ class Renderer: NSObject, MTKViewDelegate {
         renderEncoder.setVertexBuffer(scene.vertexBuffer1, offset: 0, index: 0)
         renderEncoder.setVertexBuffer(uniformBuffer, offset: 0, index: 1)
 
-        renderEncoder.setFragmentTexture(scene.texture, index: 0)
+        renderEncoder.setFragmentTexture(scene.texture1, index: 0)
         renderEncoder.setFragmentSamplerState(textureSampler, index: 0)
         
         renderEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: scene.vertexCount1, instanceCount: scene.vertexCount1 / 3)
         
-        /*renderEncoder.setVertexBuffer(vertexBuffer2, offset: 0, index: 0)
+        // ITERATION
+        
+        renderEncoder.setVertexBuffer(scene.vertexBuffer2, offset: 0, index: 0)
         renderEncoder.setVertexBuffer(uniformBuffer, offset: 0, index: 1)
         
-        renderEncoder.setFragmentTexture(texture, index: 0)
-        if let samplerState = samplerState {
-            renderEncoder.setFragmentSamplerState(samplerState, index: 0)
-        }
+        renderEncoder.setFragmentTexture(scene.texture2, index: 0)
+        renderEncoder.setFragmentSamplerState(textureSampler, index: 0)
         
-        renderEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: vertexCount2, instanceCount: vertexCount2/3)*/
+        renderEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: scene.vertexCount2, instanceCount: scene.vertexCount2 / 3)
+        
+        // LOOP END
         
         renderEncoder.endEncoding()
         
