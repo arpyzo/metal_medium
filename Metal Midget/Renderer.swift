@@ -77,13 +77,13 @@ class Renderer: NSObject, MTKViewDelegate {
         
         // ITERATION
         
-        renderEncoder.setVertexBuffer(scene.vertexBuffer2, offset: 0, index: 0)
-        renderEncoder.setVertexBuffer(uniformBuffer, offset: 0, index: 1)
+        //renderEncoder.setVertexBuffer(scene.vertexBuffer2, offset: 0, index: 0)
+        //renderEncoder.setVertexBuffer(uniformBuffer, offset: 0, index: 1)
         
-        renderEncoder.setFragmentTexture(scene.texture2, index: 0)
-        renderEncoder.setFragmentSamplerState(textureSampler, index: 0)
+        //renderEncoder.setFragmentTexture(scene.texture2, index: 0)
+        //renderEncoder.setFragmentSamplerState(textureSampler, index: 0)
         
-        renderEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: scene.vertexCount2, instanceCount: scene.vertexCount2 / 3)
+        //renderEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: scene.vertexCount2, instanceCount: scene.vertexCount2 / 3)
         
         // LOOP END
         
