@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D70050F42304AD6600673C96 /* Float4x4Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D70050F32304AD6600673C96 /* Float4x4Extensions.swift */; };
 		D7147D182173A412006E6FA5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7147D172173A412006E6FA5 /* ViewController.swift */; };
 		D71C915720DF155C008C8B96 /* Vertex.swift in Sources */ = {isa = PBXBuildFile; fileRef = D71C915620DF155C008C8B96 /* Vertex.swift */; };
 		D71C915920DF173F008C8B96 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D71C915820DF173F008C8B96 /* Renderer.swift */; };
@@ -22,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D70050F32304AD6600673C96 /* Float4x4Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Float4x4Extensions.swift; sourceTree = "<group>"; };
 		D7147D172173A412006E6FA5 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		D71C915620DF155C008C8B96 /* Vertex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vertex.swift; sourceTree = "<group>"; };
 		D71C915820DF173F008C8B96 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
@@ -81,6 +83,7 @@
 				D7147D172173A412006E6FA5 /* ViewController.swift */,
 				D7C1521122530E630017C0FB /* Rectangle2.swift */,
 				D7BA067822566FC2007460CC /* Scene.swift */,
+				D70050F32304AD6600673C96 /* Float4x4Extensions.swift */,
 			);
 			path = "Metal Midget";
 			sourceTree = "<group>";
@@ -159,6 +162,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D7147D182173A412006E6FA5 /* ViewController.swift in Sources */,
+				D70050F42304AD6600673C96 /* Float4x4Extensions.swift in Sources */,
 				D7D9B9FD20258F93000C79B7 /* Shaders.metal in Sources */,
 				D7BA067922566FC2007460CC /* Scene.swift in Sources */,
 				D7C1521222530E630017C0FB /* Rectangle2.swift in Sources */,

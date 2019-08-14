@@ -4,8 +4,6 @@ class Rectangle {
     var vertexCount: Int
 
     init() {
-        // x, y, z = 0
-        // tx, ty - texture coords
         let TOP_LEFT     = Vertex(x: -0.5, y:  0.5, z:  0.0, tx: 0.0, ty: 0.0)
         let TOP_RIGHT    = Vertex(x:  0.5, y:  0.5, z:  0.0, tx: 1.0, ty: 0.0)
         let BOTTOM_LEFT  = Vertex(x: -0.5, y: -0.5, z:  0.0, tx: 0.0, ty: 1.0)

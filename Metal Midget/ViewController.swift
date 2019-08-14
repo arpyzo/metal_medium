@@ -24,7 +24,7 @@ class ViewController: UIViewController {
         renderer.scene = scene
     }
     
-    /*override func didReceiveMemoryWarning() {
+    override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-    }*/
+    }
 }

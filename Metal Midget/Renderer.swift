@@ -35,9 +35,16 @@ class Renderer: NSObject, MTKViewDelegate {
         modelMatrix = modelMatrix ?? ModelMatrix()
         modelMatrix.updateRatioMatrix(width: Float(size.width), height: Float(size.height))
         
-        uniformBuffer = metalDevice.makeBuffer(bytes: &modelMatrix.screenRatioMatrix,
-                                               length: MemoryLayout.size(ofValue: modelMatrix.screenRatioMatrix),
-                                               options: [])
+        //uniformBuffer = metalDevice.makeBuffer(bytes: &modelMatrix.screenRatioMatrix,
+        //                                       length: MemoryLayout.size(ofValue: modelMatrix.screenRatioMatrix),
+        //                                       options: [])
+        
+        let bufferSize = MemoryLayout<Float>.size * float4x4.numberOfElements() * 2
+        uniformBuffer = metalDevice.makeBuffer(length: bufferSize, options: [])
+        
+        let bufferPointer = uniformBuffer.contents()
+        memcpy(bufferPointer, &modelMatrix.screenRatioMatrix, MemoryLayout<Float>.size * float4x4.numberOfElements())
+        memcpy(bufferPointer + MemoryLayout<Float>.size * float4x4.numberOfElements(), &scene.scaleMatrix, MemoryLayout<Float>.size*float4x4.numberOfElements())
     }
     
     func draw(in view: MTKView) {

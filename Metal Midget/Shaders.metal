@@ -4,6 +4,7 @@ using namespace metal;
 
 struct Uniforms {
     float4x4 modelMatrix;
+    float4x4 scaleMatrix;
 };
 
 struct VertexIn {
@@ -23,7 +24,7 @@ vertex VertexOut basic_vertex(const device VertexIn* vertices [[ buffer(0) ]],
     VertexIn vertexIn = vertices[vertexId];
     
     VertexOut vertexOut;
-    vertexOut.position = uniforms.modelMatrix * float4(vertexIn.position, 1);
+    vertexOut.position = uniforms.modelMatrix * uniforms.scaleMatrix * float4(vertexIn.position, 1);
     vertexOut.texCoord = vertexIn.texCoord;
     
     return vertexOut;

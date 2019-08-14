@@ -1,6 +1,8 @@
 import MetalKit
 
 class Scene {
+    var scaleMatrix: float4x4!
+    
     var clearColor: MTLClearColor
     
     var textureLoader: MTKTextureLoader!
@@ -14,6 +16,8 @@ class Scene {
     
     init(_ metalDevice: MTLDevice) {
         clearColor = MTLClearColor(red: 0.0, green: 104.0/255.0, blue: 5.0/255.0, alpha: 1.0)
+        
+        scaleMatrix = float4x4.makeScalingMatrix(1, 2, 0)
         
         textureLoader = MTKTextureLoader(device: metalDevice)
         
