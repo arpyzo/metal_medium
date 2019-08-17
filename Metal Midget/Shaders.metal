@@ -3,8 +3,8 @@
 using namespace metal;
 
 struct Uniforms {
-    float4x4 modelMatrix;
-    float4x4 scaleMatrix;
+    float4x4 viewMatrix;
+    float4x4 translationMatrix;
 };
 
 struct VertexIn {
@@ -24,7 +24,7 @@ vertex VertexOut basic_vertex(const device VertexIn* vertices [[ buffer(0) ]],
     VertexIn vertexIn = vertices[vertexId];
     
     VertexOut vertexOut;
-    vertexOut.position = uniforms.modelMatrix * uniforms.scaleMatrix * float4(vertexIn.position, 1);
+    vertexOut.position = uniforms.viewMatrix * uniforms.translationMatrix * float4(vertexIn.position, 1);
     vertexOut.texCoord = vertexIn.texCoord;
     
     return vertexOut;

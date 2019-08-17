@@ -9,7 +9,6 @@ class Renderer: NSObject, MTKViewDelegate {
     var textureSampler: MTLSamplerState!
 
     var scene: Scene!
-    var modelMatrix: ModelMatrix!
     var uniformBuffer: MTLBuffer!
 
     init(_ metalDevice: MTLDevice) {
@@ -32,19 +31,13 @@ class Renderer: NSObject, MTKViewDelegate {
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         print("New screen size. Width: \(size.width), Height: \(size.height)")
         
-        modelMatrix = modelMatrix ?? ModelMatrix()
-        modelMatrix.updateRatioMatrix(width: Float(size.width), height: Float(size.height))
-        
-        //uniformBuffer = metalDevice.makeBuffer(bytes: &modelMatrix.screenRatioMatrix,
-        //                                       length: MemoryLayout.size(ofValue: modelMatrix.screenRatioMatrix),
-        //                                       options: [])
+        scene.updateScreenRatioMatrix(width: Float(size.width), height: Float(size.height))
         
         let bufferSize = MemoryLayout<Float>.size * float4x4.numberOfElements() * 2
         uniformBuffer = metalDevice.makeBuffer(length: bufferSize, options: [])
         
         let bufferPointer = uniformBuffer.contents()
-        memcpy(bufferPointer, &modelMatrix.screenRatioMatrix, MemoryLayout<Float>.size * float4x4.numberOfElements())
-        memcpy(bufferPointer + MemoryLayout<Float>.size * float4x4.numberOfElements(), &scene.scaleMatrix, MemoryLayout<Float>.size*float4x4.numberOfElements())
+        memcpy(bufferPointer, &scene.viewMatrix, MemoryLayout<Float>.size * float4x4.numberOfElements())
     }
     
     func draw(in view: MTKView) {
@@ -74,14 +67,23 @@ class Renderer: NSObject, MTKViewDelegate {
         
         // LOOP START
         
-        renderEncoder.setVertexBuffer(scene.vertexBuffer1, offset: 0, index: 0)
-        renderEncoder.setVertexBuffer(uniformBuffer, offset: 0, index: 1)
-
-        renderEncoder.setFragmentTexture(scene.texture1, index: 0)
-        renderEncoder.setFragmentSamplerState(textureSampler, index: 0)
+        for mapCol in 0...1 {
+            for mapRow in 0...1 {
+                var translationMatrix = float4x4.makeTranslationMatrix(Float(mapCol * 2), Float(mapRow * 2), 0)
+                
+                let bufferPointer = uniformBuffer.contents()
+                memcpy(bufferPointer + MemoryLayout<Float>.size * float4x4.numberOfElements(), &translationMatrix, MemoryLayout<Float>.size*float4x4.numberOfElements()
+                )
+                
+                renderEncoder.setVertexBuffer(scene.vertexBuffer1, offset: 0, index: 0)
+                renderEncoder.setVertexBuffer(uniformBuffer, offset: 0, index: 1)
+                
+                renderEncoder.setFragmentTexture(scene.map[mapCol][mapRow], index: 0)
+                renderEncoder.setFragmentSamplerState(textureSampler, index: 0)
         
-        renderEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: scene.vertexCount1, instanceCount: scene.vertexCount1 / 3)
-        
+                renderEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: scene.vertexCount1, instanceCount: scene.vertexCount1 / 3)
+            }
+        }
         // ITERATION
         
         //renderEncoder.setVertexBuffer(scene.vertexBuffer2, offset: 0, index: 0)

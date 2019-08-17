@@ -1,7 +1,9 @@
 import MetalKit
 
 class Scene {
-    var scaleMatrix: float4x4!
+    var scalingMatrix: float4x4!
+    var screenRatioMatrix: float4x4!
+    var viewMatrix: float4x4!
     
     var clearColor: MTLClearColor
     
@@ -14,10 +16,10 @@ class Scene {
     var vertexBuffer1: MTLBuffer!
     var vertexBuffer2: MTLBuffer!
     
+    var map = [[MTLTexture]]()
+    
     init(_ metalDevice: MTLDevice) {
         clearColor = MTLClearColor(red: 0.0, green: 104.0/255.0, blue: 5.0/255.0, alpha: 1.0)
-        
-        scaleMatrix = float4x4.makeScalingMatrix(1, 2, 0)
         
         textureLoader = MTKTextureLoader(device: metalDevice)
         
@@ -34,5 +36,32 @@ class Scene {
 
         vertexBuffer1 = metalDevice.makeBuffer(bytes: &r1.vertexData, length: r1.vertexDataSize, options: [])
         vertexBuffer2 = metalDevice.makeBuffer(bytes: &r2.vertexData, length: r2.vertexDataSize, options: [])
+        
+        map.append([texture1, texture2])
+        map.append([texture2, texture1])
+        
+        updateScalingMatrix(x: 1, y: 1)
+        updateScreenRatioMatrix(width: 1, height: 1)
+    }
+    
+    func updateScalingMatrix(x: Float, y: Float) {
+        scalingMatrix = float4x4.makeScalingMatrix(x, y, 0)
+        viewMatrix = screenRatioMatrix * scalingMatrix
+
+    }
+
+    // iPhone 8 - 750 x 1334
+    func updateScreenRatioMatrix(width: Float, height: Float) {
+        var screenRatioMatrix = matrix_identity_float4x4
+        
+        if (height > width) {
+            screenRatioMatrix[0,0] = 1
+            screenRatioMatrix[1,1] = width / height
+        } else {
+            screenRatioMatrix[0,0] = height / width
+            screenRatioMatrix[1,1] = 1
+        }
+        
+        viewMatrix = screenRatioMatrix * scalingMatrix
     }
 }

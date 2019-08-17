@@ -21,6 +21,8 @@ class ViewController: UIViewController {
         mtkView.delegate = renderer
         
         scene = Scene(metalDevice)
+        scene.updateScreenRatioMatrix(width:  Float(self.view.bounds.size.width),
+                                      height: Float(self.view.bounds.size.height))
         renderer.scene = scene
     }
     
