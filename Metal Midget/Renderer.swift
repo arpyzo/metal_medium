@@ -33,7 +33,7 @@ class Renderer: NSObject, MTKViewDelegate {
         
         scene.updateScreenRatioMatrix(width: Float(size.width), height: Float(size.height))
         
-        let bufferSize = MemoryLayout<Float>.size * float4x4.numberOfElements() * 2
+        let bufferSize = MemoryLayout<Float>.size * float4x4.numberOfElements()
         uniformBuffer = metalDevice.makeBuffer(length: bufferSize, options: [])
         
         let bufferPointer = uniformBuffer.contents()
@@ -69,15 +69,19 @@ class Renderer: NSObject, MTKViewDelegate {
         
         for mapCol in 0...1 {
             for mapRow in 0...1 {
-                var translationMatrix = float4x4.makeTranslationMatrix(Float(mapCol * 2), Float(mapRow * 2), 0)
+                var translationMatrix = float4x4.makeTranslationMatrix(Float(mapCol) * 0.3 - 0.4, Float(mapRow) * 0.3 + 0.3, 0)
+
+                let bufferSize = MemoryLayout<Float>.size * float4x4.numberOfElements()
+                let uniformBuffer2 = metalDevice.makeBuffer(length: bufferSize, options: [])
                 
-                let bufferPointer = uniformBuffer.contents()
-                memcpy(bufferPointer + MemoryLayout<Float>.size * float4x4.numberOfElements(), &translationMatrix, MemoryLayout<Float>.size*float4x4.numberOfElements()
+                let bufferPointer = uniformBuffer2!.contents()
+                memcpy(bufferPointer, &translationMatrix, MemoryLayout<Float>.size * float4x4.numberOfElements()
                 )
                 
                 renderEncoder.setVertexBuffer(scene.vertexBuffer1, offset: 0, index: 0)
                 renderEncoder.setVertexBuffer(uniformBuffer, offset: 0, index: 1)
-                
+                renderEncoder.setVertexBuffer(uniformBuffer2, offset: 0, index: 2)
+
                 renderEncoder.setFragmentTexture(scene.map[mapCol][mapRow], index: 0)
                 renderEncoder.setFragmentSamplerState(textureSampler, index: 0)
         

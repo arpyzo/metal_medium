@@ -4,6 +4,9 @@ using namespace metal;
 
 struct Uniforms {
     float4x4 viewMatrix;
+};
+
+struct Uniforms2 {
     float4x4 translationMatrix;
 };
 
@@ -19,12 +22,14 @@ struct VertexOut {
 
 vertex VertexOut basic_vertex(const device VertexIn* vertices [[ buffer(0) ]],
                               const device Uniforms& uniforms [[ buffer(1) ]],
+                              const device Uniforms2& uniforms2 [[ buffer(2) ]],
                               unsigned int vertexId [[ vertex_id ]]) {
     
     VertexIn vertexIn = vertices[vertexId];
     
     VertexOut vertexOut;
-    vertexOut.position = uniforms.viewMatrix * uniforms.translationMatrix * float4(vertexIn.position, 1);
+    vertexOut.position = uniforms.viewMatrix * uniforms2.translationMatrix * float4(vertexIn.position, 1);
+    //vertexOut.position = uniforms.viewMatrix * float4(vertexIn.position, 1);
     vertexOut.texCoord = vertexIn.texCoord;
     
     return vertexOut;

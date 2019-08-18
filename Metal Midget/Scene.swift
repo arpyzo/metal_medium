@@ -40,8 +40,8 @@ class Scene {
         map.append([texture1, texture2])
         map.append([texture2, texture1])
         
+        screenRatioMatrix = matrix_identity_float4x4
         updateScalingMatrix(x: 1, y: 1)
-        updateScreenRatioMatrix(width: 1, height: 1)
     }
     
     func updateScalingMatrix(x: Float, y: Float) {
@@ -55,11 +55,9 @@ class Scene {
         var screenRatioMatrix = matrix_identity_float4x4
         
         if (height > width) {
-            screenRatioMatrix[0,0] = 1
             screenRatioMatrix[1,1] = width / height
         } else {
             screenRatioMatrix[0,0] = height / width
-            screenRatioMatrix[1,1] = 1
         }
         
         viewMatrix = screenRatioMatrix * scalingMatrix
